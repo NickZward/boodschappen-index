@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boodschappenindex</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --s1: #2a78d6; --s2: #eb6834; --good-text: #006300;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --good-text: #0ca30c;
+  }
+}
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--page); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; padding: 24px 16px 48px; }
+main { max-width: 960px; margin: 0 auto; display: grid; gap: 16px; }
+h1 { font-size: 1.5rem; }
+.sub { color: var(--ink-2); max-width: 62ch; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile .label { font-size: .8rem; color: var(--ink-2); }
+.tile .value { font-size: 1.7rem; font-weight: 650; margin-top: 2px; }
+.tile .hint { font-size: .78rem; color: var(--muted); }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: .82rem; color: var(--ink-2); margin: 6px 0 2px; }
+.legend .chip { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.chartwrap { position: relative; }
+svg text { font: 11px system-ui, -apple-system, "Segoe UI", sans-serif; font-variant-numeric: tabular-nums; fill: var(--muted); }
+.tooltip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: .8rem; box-shadow: 0 2px 8px rgba(0,0,0,.12); display: none; min-width: 150px; }
+.tooltip b { font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+th { text-align: left; color: var(--ink-2); font-weight: 600; border-bottom: 1px solid var(--baseline); padding: 6px 8px; }
+td { padding: 5px 8px; border-bottom: 1px solid var(--grid); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; }
+.bonus { color: var(--good-text); font-size: .78rem; }
+.empty { color: var(--muted); font-style: italic; }
+h2 { font-size: 1.05rem; margin-bottom: 8px; }
+footer { color: var(--muted); font-size: .8rem; max-width: 72ch; }
+footer a { color: var(--ink-2); }
+details summary { cursor: pointer; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <h1>🛒 Boodschappenindex</h1>
+    <p class="sub">Een onafhankelijke, dagelijkse meting van Nederlandse supermarktprijzen op basis
+    van een vast mandje van 72 alledaagse producten bij Albert Heijn. Basisdatum = 100.</p>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="card">
+    <h2>Prijsindex</h2>
+    <div class="legend" id="legend"></div>
+    <div class="chartwrap">
+      <svg id="chart" width="100%" height="280" viewBox="0 0 920 280" preserveAspectRatio="none" aria-label="Indexverloop"></svg>
+      <div class="tooltip" id="tt"></div>
+    </div>
+    <p class="empty" id="chart-note"></p>
+  </div>
+
+  <div class="card">
+    <h2>Krimpflatie-log</h2>
+    <p class="sub" style="font-size:.85rem">Producten waarvan de verpakking kleiner werd terwijl de schapprijs
+    gelijk bleef of steeg. Zelfde product-ID, kleinere inhoud.</p>
+    <div class="scroll" id="shrink"></div>
+  </div>
+
+  <div class="card">
+    <h2>Per categorie</h2>
+    <div class="scroll" id="cats"></div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary><h2 style="display:inline">Het mandje vandaag (tabelweergave)</h2></summary>
+      <div class="scroll" id="products" style="margin-top:10px"></div>
+    </details>
+  </div>
+
+  <footer>
+    Methode: vast mandje (Laspeyres), categorie&#8209;gewichten benaderen CBS&#8209;bestedingsaandelen.
+    Schapprijs = prijs zonder bonus; betaalprijs = inclusief bonus; eenheidsprijs = prijs per liter/kilo
+    (deze beweegt ook bij krimpflatie). Dagelijkse momentopname van &eacute;&eacute;n winkelketen; dit is
+    geen offici&euml;le inflatiemaatstaf. Data en code:
+    <a href="https://github.com/NickZward/boodschappen-index">github.com/NickZward/boodschappen-index</a>.
+    <span id="gen"></span>
+  </footer>
+</main>
+
+<script>
+const fmtE = v => v == null ? "" : "€" + v.toFixed(2).replace(".", ",");
+const fmtI = v => v == null ? "" : v.toFixed(1).replace(".", ",");
+const fmtD = iso => new Date(iso + "T12:00:00").toLocaleDateString("nl-NL", {day: "numeric", month: "short"});
+
+fetch("data.json").then(r => r.json()).then(d => {
+  const n = d.dates.length, last = n - 1;
+
+  // Stat tiles
+  const tiles = [
+    {label: "Schapprijs-index", value: fmtI(d.index_list[last]), hint: "basis " + fmtD(d.base_date) + " = 100"},
+    {label: "Betaalprijs-index", value: fmtI(d.index_paid[last]), hint: "inclusief bonus"},
+    {label: "Mandje vandaag", value: fmtE(d.basket_cost[last]), hint: d.n_products[last] + " producten, schapprijs"},
+    {label: "In de bonus", value: d.bonus_count[last], hint: "van " + d.n_products[last] + " producten"},
+  ];
+  document.getElementById("tiles").innerHTML = tiles.map(t =>
+    `<div class="card tile"><div class="label">${t.label}</div><div class="value">${t.value}</div><div class="hint">${t.hint}</div></div>`).join("");
+
+  // Legend
+  const SERIES = [
+    {key: "index_list", name: "Schapprijs", col: "var(--s1)"},
+    {key: "index_paid", name: "Betaalprijs", col: "var(--s2)"},
+  ];
+  document.getElementById("legend").innerHTML = SERIES.map(s =>
+    `<span><span class="chip" style="background:${s.col}"></span>${s.name}</span>`).join("");
+
+  // Chart
+  const svg = document.getElementById("chart");
+  const W = 920, H = 280, M = {t: 14, r: 64, b: 26, l: 44};
+  const all = SERIES.flatMap(s => d[s.key]).filter(v => v != null);
+  let lo = Math.min(...all), hi = Math.max(...all);
+  if (hi - lo < 4) { const mid = (hi + lo) / 2; lo = mid - 2; hi = mid + 2; }
+  const pad = (hi - lo) * 0.1; lo -= pad; hi += pad;
+  const x = i => n === 1 ? (M.l + (W - M.l - M.r) / 2) : M.l + (W - M.l - M.r) * i / (n - 1);
+  const y = v => M.t + (H - M.t - M.b) * (1 - (v - lo) / (hi - lo));
+  let g = "";
+  const ticks = 4;
+  for (let i = 0; i <= ticks; i++) {
+    const v = lo + (hi - lo) * i / ticks, yy = y(v);
+    g += `<line x1="${M.l}" x2="${W - M.r}" y1="${yy}" y2="${yy}" stroke="var(--grid)" stroke-width="1"/>`;
+    g += `<text x="${M.l - 8}" y="${yy + 4}" text-anchor="end">${fmtI(v)}</text>`;
+  }
+  const nx = Math.min(n, 6);
+  for (let i = 0; i < nx; i++) {
+    const idx = Math.round(i * (n - 1) / Math.max(nx - 1, 1));
+    g += `<text x="${x(idx)}" y="${H - 8}" text-anchor="middle">${fmtD(d.dates[idx])}</text>`;
+  }
+  g += `<line x1="${M.l}" x2="${W - M.r}" y1="${H - M.b}" y2="${H - M.b}" stroke="var(--baseline)" stroke-width="1"/>`;
+  for (const s of SERIES) {
+    const pts = d[s.key].map((v, i) => v == null ? null : [x(i), y(v)]).filter(Boolean);
+    if (pts.length > 1)
+      g += `<path d="M${pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L")}" fill="none" stroke="${s.col}" stroke-width="2" stroke-linejoin="round"/>`;
+    for (const p of pts.length > 12 ? [pts[pts.length - 1]] : pts)
+      g += `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="${s.col}" stroke="var(--surface)" stroke-width="2"/>`;
+    const lastPt = pts[pts.length - 1];
+    if (lastPt)
+      g += `<text x="${lastPt[0] + 10}" y="${lastPt[1] + 4}" style="fill:var(--ink-2)">${s.name}</text>`;
+  }
+  g += `<line id="xh" y1="${M.t}" y2="${H - M.b}" stroke="var(--baseline)" stroke-width="1" visibility="hidden"/>`;
+  svg.innerHTML = g;
+  document.getElementById("chart-note").textContent =
+    n < 8 ? `Verzamelt dagelijks data sinds ${fmtD(d.base_date)}. Het verloop wordt zichtbaar naarmate de reeks groeit.` : "";
+
+  // Hover: crosshair + tooltip
+  const tt = document.getElementById("tt"), xh = () => svg.querySelector("#xh");
+  svg.addEventListener("mousemove", ev => {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * W / r.width;
+    const i = Math.max(0, Math.min(n - 1, Math.round((px - M.l) / ((W - M.l - M.r) / Math.max(n - 1, 1)))));
+    xh().setAttribute("x1", x(i)); xh().setAttribute("x2", x(i)); xh().setAttribute("visibility", "visible");
+    tt.style.display = "block";
+    tt.innerHTML = `<div style="color:var(--muted)">${fmtD(d.dates[i])}</div>` +
+      SERIES.map(s => `<div><span class="chip" style="background:${s.col};display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle"></span>${s.name}: <b>${fmtI(d[s.key][i])}</b></div>`).join("") +
+      `<div>Mandje: <b>${fmtE(d.basket_cost[i])}</b></div>`;
+    const cx = x(i) * r.width / W;
+    tt.style.left = Math.min(cx + 14, r.width - 170) + "px";
+    tt.style.top = "16px";
+  });
+  svg.addEventListener("mouseleave", () => { tt.style.display = "none"; xh().setAttribute("visibility", "hidden"); });
+
+  // Shrinkflation log
+  document.getElementById("shrink").innerHTML = d.shrinkflation.length === 0
+    ? `<p class="empty">Nog geen krimpflatie waargenomen sinds ${fmtD(d.base_date)}.</p>`
+    : `<table><tr><th>Datum</th><th>Product</th><th>Was</th><th>Werd</th><th class="num">Prijs per eenheid</th></tr>` +
+      d.shrinkflation.map(e => `<tr><td>${fmtD(e.date)}</td><td>${e.title}</td><td>${e.old_size}</td><td>${e.new_size}</td><td class="num">${e.old_unit_price} → ${e.new_unit_price}</td></tr>`).join("") + "</table>";
+
+  // Categories
+  document.getElementById("cats").innerHTML =
+    `<table><tr><th>Categorie</th><th class="num">Gewicht</th><th class="num">Index (schapprijs)</th></tr>` +
+    d.categories.map(c => `<tr><td>${c.name}</td><td class="num">${c.weight}</td><td class="num">${fmtI(c.rel_latest)}</td></tr>`).join("") + "</table>";
+
+  // Product table
+  document.getElementById("products").innerHTML =
+    `<table><tr><th>Product</th><th>Categorie</th><th>Inhoud</th><th class="num">Schapprijs</th><th class="num">Nu</th></tr>` +
+    d.products_latest.map(p => `<tr><td>${p.title}${p.is_bonus ? ' <span class="bonus">bonus</span>' : ""}</td><td>${p.category}</td><td>${p.size}</td><td class="num">${fmtE(p.list_price)}</td><td class="num">${fmtE(p.current_price ?? p.list_price)}</td></tr>`).join("") + "</table>";
+
+  document.getElementById("gen").textContent = "Laatste update: " + new Date(d.generated).toLocaleString("nl-NL") + ".";
+});
+</script>
+</body>
+</html>
