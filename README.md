@@ -6,13 +6,13 @@ Every day an automated job records the price of the exact same products (same pr
 
 | Series | What it measures |
 |---|---|
-| **Schapprijs-index** | Shelf prices before any discount. The headline index. |
-| **Betaalprijs-index** | Prices actually paid, bonus discounts included. The gap with the shelf index shows how much promo pressure there is. |
-| **Eenheidsprijs-index** | Price per liter/kilo. This one also moves when a package quietly shrinks while the shelf price stays the same. |
+| **Shelf-price index** | Shelf prices before any discount. The headline index. |
+| **Paid-price index** | Prices actually paid, bonus discounts included. The gap with the shelf index shows how much promo pressure there is. |
+| **Unit-price index** | Price per liter/kilo. This one also moves when a package quietly shrinks while the shelf price stays the same. |
 
 ## Shrinkflation detection
 
-Because products are tracked by ID, a package change is directly observable: same product, smaller `salesUnitSize`, same or higher shelf price. Every such event lands in [data/shrinkflation.csv](data/shrinkflation.csv) and in the dashboard's krimpflatie-log, with the price per unit before and after.
+Because products are tracked by ID, a package change is directly observable: same product, smaller `salesUnitSize`, same or higher shelf price. Every such event lands in [data/shrinkflation.csv](data/shrinkflation.csv) and in the dashboard's shrinkflation log, with the price per unit before and after.
 
 ## Method
 

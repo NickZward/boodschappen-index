@@ -1,6 +1,6 @@
 [
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "halfvolle melk",
   "webshopId": 1525,
@@ -11,7 +11,7 @@
   "unitPriceDescription": "prijs per liter €1.29"
  },
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "volle melk",
   "webshopId": 450535,
@@ -22,7 +22,7 @@
   "unitPriceDescription": "prijs per liter €0.99"
  },
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "ah magere yoghurt",
   "webshopId": 96643,
@@ -33,7 +33,7 @@
   "unitPriceDescription": "prijs per liter €1.39"
  },
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "kwark naturel",
   "webshopId": 429777,
@@ -44,7 +44,7 @@
   "unitPriceDescription": "prijs per kg €3.49"
  },
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "jong belegen kaas plakken",
   "webshopId": 320085,
@@ -55,7 +55,7 @@
   "unitPriceDescription": "normale prijs per kg €21.12"
  },
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "roomboter ongezouten",
   "webshopId": 193236,
@@ -66,7 +66,7 @@
   "unitPriceDescription": "prijs per kg €10.36"
  },
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "eieren scharrel 10",
   "webshopId": 479760,
@@ -77,7 +77,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Zuivel & eieren",
+  "category": "Dairy & eggs",
   "category_weight": 14,
   "query": "vla vanille",
   "webshopId": 118131,
@@ -88,7 +88,7 @@
   "unitPriceDescription": "prijs per liter €1.59"
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "volkoren brood heel",
   "webshopId": 485699,
@@ -99,7 +99,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "wit brood heel",
   "webshopId": 112336,
@@ -110,7 +110,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "bolletje beschuit",
   "webshopId": 513514,
@@ -121,7 +121,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "cornflakes",
   "webshopId": 162826,
@@ -132,7 +132,7 @@
   "unitPriceDescription": "prijs per kg €8.24"
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "muesli",
   "webshopId": 438127,
@@ -143,7 +143,7 @@
   "unitPriceDescription": "prijs per kg €2.65"
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "rijst zilvervlies",
   "webshopId": 162513,
@@ -154,7 +154,7 @@
   "unitPriceDescription": "prijs per kg €1.42"
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "spaghetti 500",
   "webshopId": 159760,
@@ -165,7 +165,7 @@
   "unitPriceDescription": "prijs per kg €1.70"
  },
  {
-  "category": "Brood & granen",
+  "category": "Bread & cereals",
   "category_weight": 12,
   "query": "tarwebloem",
   "webshopId": 36783,
@@ -176,7 +176,7 @@
   "unitPriceDescription": "prijs per kg €0.85"
  },
  {
-  "category": "Vlees & vis",
+  "category": "Meat & fish",
   "category_weight": 15,
   "query": "kipfilet",
   "webshopId": 543332,
@@ -187,7 +187,7 @@
   "unitPriceDescription": "prijs per kg €17.27"
  },
  {
-  "category": "Vlees & vis",
+  "category": "Meat & fish",
   "category_weight": 15,
   "query": "rundergehakt",
   "webshopId": 4004,
@@ -198,7 +198,7 @@
   "unitPriceDescription": "prijs per kg €14.17"
  },
  {
-  "category": "Vlees & vis",
+  "category": "Meat & fish",
   "category_weight": 15,
   "query": "speklappen",
   "webshopId": 232421,
@@ -209,7 +209,7 @@
   "unitPriceDescription": "prijs per kg €11.36"
  },
  {
-  "category": "Vlees & vis",
+  "category": "Meat & fish",
   "category_weight": 15,
   "query": "rookworst",
   "webshopId": 367555,
@@ -220,7 +220,7 @@
   "unitPriceDescription": "prijs per kg €16.69"
  },
  {
-  "category": "Vlees & vis",
+  "category": "Meat & fish",
   "category_weight": 15,
   "query": "zalmfilet",
   "webshopId": 598216,
@@ -231,7 +231,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Vlees & vis",
+  "category": "Meat & fish",
   "category_weight": 15,
   "query": "tonijn in water",
   "webshopId": 485298,
@@ -242,7 +242,7 @@
   "unitPriceDescription": "prijs per kg €22.84"
  },
  {
-  "category": "Vlees & vis",
+  "category": "Meat & fish",
   "category_weight": 15,
   "query": "ham plakken",
   "webshopId": 560666,
@@ -253,7 +253,7 @@
   "unitPriceDescription": "prijs per kg €19.87"
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "trostomaten",
   "webshopId": 455430,
@@ -264,7 +264,7 @@
   "unitPriceDescription": "prijs per kg €5.53"
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "komkommer",
   "webshopId": 54074,
@@ -275,7 +275,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "uien",
   "webshopId": 525847,
@@ -286,7 +286,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "paprika rood",
   "webshopId": 4117,
@@ -297,7 +297,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "ijsbergsla",
   "webshopId": 129684,
@@ -308,7 +308,7 @@
   "unitPriceDescription": "prijs per kg €5.45"
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "broccoli",
   "webshopId": 226367,
@@ -319,7 +319,7 @@
   "unitPriceDescription": "prijs per kg €3.31"
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "winterpeen",
   "webshopId": 4076,
@@ -330,7 +330,7 @@
   "unitPriceDescription": "prijs per kg €1.39"
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "witte champignons",
   "webshopId": 67842,
@@ -341,7 +341,7 @@
   "unitPriceDescription": "prijs per kg €4.73"
  },
  {
-  "category": "Groente",
+  "category": "Vegetables",
   "category_weight": 10,
   "query": "aardappelen kruimig",
   "webshopId": 123955,
@@ -418,7 +418,7 @@
   "unitPriceDescription": "prijs per kg €6.49"
  },
  {
-  "category": "Dranken",
+  "category": "Drinks",
   "category_weight": 11,
   "query": "thee engelse melange",
   "webshopId": 381377,
@@ -429,7 +429,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Dranken",
+  "category": "Drinks",
   "category_weight": 11,
   "query": "cola regular",
   "webshopId": 616715,
@@ -440,7 +440,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Dranken",
+  "category": "Drinks",
   "category_weight": 11,
   "query": "appelsientje sinaasappel",
   "webshopId": 55444,
@@ -451,7 +451,7 @@
   "unitPriceDescription": "normale prijs per liter €2.99"
  },
  {
-  "category": "Dranken",
+  "category": "Drinks",
   "category_weight": 11,
   "query": "pils krat",
   "webshopId": 210145,
@@ -462,7 +462,7 @@
   "unitPriceDescription": "normale prijs per liter €2.78"
  },
  {
-  "category": "Dranken",
+  "category": "Drinks",
   "category_weight": 11,
   "query": "mineraalwater koolzuurhoudend",
   "webshopId": 567973,
@@ -473,7 +473,7 @@
   "unitPriceDescription": "prijs per liter €0.86"
  },
  {
-  "category": "Snacks & zoet",
+  "category": "Snacks & sweets",
   "category_weight": 9,
   "query": "chocoladereep melk",
   "webshopId": 594632,
@@ -484,7 +484,7 @@
   "unitPriceDescription": "prijs per kg €20.10"
  },
  {
-  "category": "Snacks & zoet",
+  "category": "Snacks & sweets",
   "category_weight": 9,
   "query": "lays naturel",
   "webshopId": 526381,
@@ -495,7 +495,7 @@
   "unitPriceDescription": "normale prijs per kg €10.95"
  },
  {
-  "category": "Snacks & zoet",
+  "category": "Snacks & sweets",
   "category_weight": 9,
   "query": "ah stroopwafels",
   "webshopId": 170059,
@@ -506,7 +506,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Snacks & zoet",
+  "category": "Snacks & sweets",
   "category_weight": 9,
   "query": "calve pindakaas",
   "webshopId": 3579,
@@ -517,7 +517,7 @@
   "unitPriceDescription": "prijs per kg €9.97"
  },
  {
-  "category": "Snacks & zoet",
+  "category": "Snacks & sweets",
   "category_weight": 9,
   "query": "hagelslag melk",
   "webshopId": 493644,
@@ -528,7 +528,7 @@
   "unitPriceDescription": "prijs per kg €9.62"
  },
  {
-  "category": "Snacks & zoet",
+  "category": "Snacks & sweets",
   "category_weight": 9,
   "query": "koekjes bastogne",
   "webshopId": 573535,
@@ -539,7 +539,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "kristalsuiker",
   "webshopId": 511002,
@@ -550,7 +550,7 @@
   "unitPriceDescription": "prijs per kg €0.75"
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "keukenzout",
   "webshopId": 3372,
@@ -561,7 +561,7 @@
   "unitPriceDescription": "prijs per kg €0.85"
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "olijfolie extra vierge",
   "webshopId": 63361,
@@ -572,7 +572,7 @@
   "unitPriceDescription": "prijs per liter €14.36"
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "zonnebloemolie",
   "webshopId": 906,
@@ -583,7 +583,7 @@
   "unitPriceDescription": "prijs per liter €1.35"
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "heinz tomato ketchup",
   "webshopId": 216494,
@@ -594,7 +594,7 @@
   "unitPriceDescription": "prijs per liter €6.73"
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "mayonaise",
   "webshopId": 429373,
@@ -605,7 +605,7 @@
   "unitPriceDescription": "prijs per liter €6.29"
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "pastasaus basilicum",
   "webshopId": 556728,
@@ -616,7 +616,7 @@
   "unitPriceDescription": "prijs per kg €2.40"
  },
  {
-  "category": "Basisvoorraad",
+  "category": "Pantry staples",
   "category_weight": 9,
   "query": "tomatensoep blik",
   "webshopId": 920,
@@ -627,7 +627,7 @@
   "unitPriceDescription": "prijs per liter €1.86"
  },
  {
-  "category": "Diepvries",
+  "category": "Frozen",
   "category_weight": 4,
   "query": "pizza margherita diepvries",
   "webshopId": 445254,
@@ -638,7 +638,7 @@
   "unitPriceDescription": "prijs per kg €8.59"
  },
  {
-  "category": "Diepvries",
+  "category": "Frozen",
   "category_weight": 4,
   "query": "spinazie diepvries",
   "webshopId": 67746,
@@ -649,7 +649,7 @@
   "unitPriceDescription": "prijs per kg €2.78"
  },
  {
-  "category": "Diepvries",
+  "category": "Frozen",
   "category_weight": 4,
   "query": "friet diepvries",
   "webshopId": 195093,
@@ -660,7 +660,7 @@
   "unitPriceDescription": "prijs per kg €1.59"
  },
  {
-  "category": "Diepvries",
+  "category": "Frozen",
   "category_weight": 4,
   "query": "vanille ijs",
   "webshopId": 759,
@@ -671,7 +671,7 @@
   "unitPriceDescription": "prijs per liter €2.79"
  },
  {
-  "category": "Huishouden",
+  "category": "Household",
   "category_weight": 5,
   "query": "toiletpapier 3-laags",
   "webshopId": 376891,
@@ -682,7 +682,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Huishouden",
+  "category": "Household",
   "category_weight": 5,
   "query": "ajax allesreiniger",
   "webshopId": 163693,
@@ -693,7 +693,7 @@
   "unitPriceDescription": "normale prijs per liter €2.36"
  },
  {
-  "category": "Huishouden",
+  "category": "Household",
   "category_weight": 5,
   "query": "afwasmiddel",
   "webshopId": 547694,
@@ -704,7 +704,7 @@
   "unitPriceDescription": "prijs per liter €8.43"
  },
  {
-  "category": "Huishouden",
+  "category": "Household",
   "category_weight": 5,
   "query": "wasmiddel vloeibaar",
   "webshopId": 590121,
@@ -715,7 +715,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Huishouden",
+  "category": "Household",
   "category_weight": 5,
   "query": "keukenpapier",
   "webshopId": 584125,
@@ -726,7 +726,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Huishouden",
+  "category": "Household",
   "category_weight": 5,
   "query": "vuilniszakken 60 liter",
   "webshopId": 537248,
@@ -737,7 +737,7 @@
   "unitPriceDescription": null
  },
  {
-  "category": "Verzorging",
+  "category": "Personal care",
   "category_weight": 3,
   "query": "tandpasta",
   "webshopId": 200282,
@@ -748,7 +748,7 @@
   "unitPriceDescription": "normale prijs per liter €31.87"
  },
  {
-  "category": "Verzorging",
+  "category": "Personal care",
   "category_weight": 3,
   "query": "shampoo",
   "webshopId": 569393,
@@ -759,7 +759,7 @@
   "unitPriceDescription": "prijs per liter €27.96"
  },
  {
-  "category": "Verzorging",
+  "category": "Personal care",
   "category_weight": 3,
   "query": "douchegel",
   "webshopId": 571835,
@@ -770,7 +770,7 @@
   "unitPriceDescription": "normale prijs per liter €24.48"
  },
  {
-  "category": "Verzorging",
+  "category": "Personal care",
   "category_weight": 3,
   "query": "handzeep",
   "webshopId": 177758,
@@ -781,7 +781,7 @@
   "unitPriceDescription": "prijs per liter €11.96"
  },
  {
-  "category": "Dranken",
+  "category": "Drinks",
   "category_weight": 11,
   "query": "douwe egberts aroma rood snelfiltermaling 500",
   "webshopId": 3738,

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,73 +54,73 @@ details summary { cursor: pointer; color: var(--ink-2); }
 <main>
   <div>
     <h1>🛒 Boodschappenindex</h1>
-    <p class="sub">Een onafhankelijke, dagelijkse meting van Nederlandse supermarktprijzen op basis
-    van een vast mandje van 72 alledaagse producten bij Albert Heijn. Basisdatum = 100.</p>
+    <p class="sub">An independent daily measurement of Dutch supermarket prices, tracking a fixed
+    basket of 72 everyday products at Albert Heijn. Base date = 100.</p>
   </div>
 
   <div class="tiles" id="tiles"></div>
 
   <div class="card">
-    <h2>Prijsindex</h2>
+    <h2>Price index</h2>
     <div class="legend" id="legend"></div>
     <div class="chartwrap">
-      <svg id="chart" width="100%" height="280" viewBox="0 0 920 280" preserveAspectRatio="none" aria-label="Indexverloop"></svg>
+      <svg id="chart" width="100%" height="280" viewBox="0 0 920 280" preserveAspectRatio="none" aria-label="Index over time"></svg>
       <div class="tooltip" id="tt"></div>
     </div>
     <p class="empty" id="chart-note"></p>
   </div>
 
   <div class="card">
-    <h2>Krimpflatie-log</h2>
-    <p class="sub" style="font-size:.85rem">Producten waarvan de verpakking kleiner werd terwijl de schapprijs
-    gelijk bleef of steeg. Zelfde product-ID, kleinere inhoud.</p>
+    <h2>Shrinkflation log</h2>
+    <p class="sub" style="font-size:.85rem">Products whose package got smaller while the shelf price
+    stayed the same or rose. Same product ID, less content.</p>
     <div class="scroll" id="shrink"></div>
   </div>
 
   <div class="card">
-    <h2>Per categorie</h2>
+    <h2>By category</h2>
     <div class="scroll" id="cats"></div>
   </div>
 
   <div class="card">
     <details>
-      <summary><h2 style="display:inline">Het mandje vandaag (tabelweergave)</h2></summary>
+      <summary><h2 style="display:inline">Today's basket (table view)</h2></summary>
       <div class="scroll" id="products" style="margin-top:10px"></div>
     </details>
   </div>
 
   <footer>
-    Methode: vast mandje (Laspeyres), categorie&#8209;gewichten benaderen CBS&#8209;bestedingsaandelen.
-    Schapprijs = prijs zonder bonus; betaalprijs = inclusief bonus; eenheidsprijs = prijs per liter/kilo
-    (deze beweegt ook bij krimpflatie). Dagelijkse momentopname van &eacute;&eacute;n winkelketen; dit is
-    geen offici&euml;le inflatiemaatstaf. Data en code:
+    Method: fixed basket (Laspeyres), category weights approximate CBS household spending shares.
+    Shelf price = price before promotions; paid price = including bonus discounts; unit price = price
+    per liter/kilo (this one also moves on shrinkflation). One daily snapshot of a single retailer;
+    this is not an official inflation measure. Data and code:
     <a href="https://github.com/NickZward/boodschappen-index">github.com/NickZward/boodschappen-index</a>.
     <span id="gen"></span>
   </footer>
 </main>
 
 <script>
-const fmtE = v => v == null ? "" : "€" + v.toFixed(2).replace(".", ",");
-const fmtI = v => v == null ? "" : v.toFixed(1).replace(".", ",");
-const fmtD = iso => new Date(iso + "T12:00:00").toLocaleDateString("nl-NL", {day: "numeric", month: "short"});
+const fmtE = v => v == null ? "" : "€" + v.toFixed(2);
+const fmtI = v => v == null ? "" : v.toFixed(1);
+const fmtD = iso => new Date(iso + "T12:00:00").toLocaleDateString("en-GB", {day: "numeric", month: "short"});
 
 fetch("data.json").then(r => r.json()).then(d => {
   const n = d.dates.length, last = n - 1;
 
   // Stat tiles
   const tiles = [
-    {label: "Schapprijs-index", value: fmtI(d.index_list[last]), hint: "basis " + fmtD(d.base_date) + " = 100"},
-    {label: "Betaalprijs-index", value: fmtI(d.index_paid[last]), hint: "inclusief bonus"},
-    {label: "Mandje vandaag", value: fmtE(d.basket_cost[last]), hint: d.n_products[last] + " producten, schapprijs"},
-    {label: "In de bonus", value: d.bonus_count[last], hint: "van " + d.n_products[last] + " producten"},
+    {label: "Shelf-price index", value: fmtI(d.index_list[last]), hint: "base " + fmtD(d.base_date) + " = 100"},
+    {label: "Paid-price index", value: fmtI(d.index_paid[last]), hint: "bonus discounts included"},
+    {label: "Basket today", value: fmtE(d.basket_cost[last]), hint: d.n_products[last] + " products, shelf price"},
+    {label: "On promotion", value: d.bonus_count[last], hint: "of " + d.n_products[last] + " products"},
   ];
   document.getElementById("tiles").innerHTML = tiles.map(t =>
     `<div class="card tile"><div class="label">${t.label}</div><div class="value">${t.value}</div><div class="hint">${t.hint}</div></div>`).join("");
 
   // Legend
   const SERIES = [
-    {key: "index_list", name: "Schapprijs", col: "var(--s1)"},
-    {key: "index_paid", name: "Betaalprijs", col: "var(--s2)"},
+    {key: "index_list", name: "Shelf price", col: "var(--s1)"},
+    {key: "index_paid", name: "Paid price", col: "var(--s2)"},
   ];
   document.getElementById("legend").innerHTML = SERIES.map(s =>
     `<span><span class="chip" style="background:${s.col}"></span>${s.name}</span>`).join("");
@@ -160,7 +160,7 @@ fetch("data.json").then(r => r.json()).then(d => {
   g += `<line id="xh" y1="${M.t}" y2="${H - M.b}" stroke="var(--baseline)" stroke-width="1" visibility="hidden"/>`;
   svg.innerHTML = g;
   document.getElementById("chart-note").textContent =
-    n < 8 ? `Verzamelt dagelijks data sinds ${fmtD(d.base_date)}. Het verloop wordt zichtbaar naarmate de reeks groeit.` : "";
+    n < 8 ? `Collecting daily data since ${fmtD(d.base_date)}. The trend becomes visible as the series grows.` : "";
 
   // Hover: crosshair + tooltip
   const tt = document.getElementById("tt"), xh = () => svg.querySelector("#xh");
@@ -172,7 +172,7 @@ fetch("data.json").then(r => r.json()).then(d => {
     tt.style.display = "block";
     tt.innerHTML = `<div style="color:var(--muted)">${fmtD(d.dates[i])}</div>` +
       SERIES.map(s => `<div><span class="chip" style="background:${s.col};display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle"></span>${s.name}: <b>${fmtI(d[s.key][i])}</b></div>`).join("") +
-      `<div>Mandje: <b>${fmtE(d.basket_cost[i])}</b></div>`;
+      `<div>Basket: <b>${fmtE(d.basket_cost[i])}</b></div>`;
     const cx = x(i) * r.width / W;
     tt.style.left = Math.min(cx + 14, r.width - 170) + "px";
     tt.style.top = "16px";
@@ -181,21 +181,21 @@ fetch("data.json").then(r => r.json()).then(d => {
 
   // Shrinkflation log
   document.getElementById("shrink").innerHTML = d.shrinkflation.length === 0
-    ? `<p class="empty">Nog geen krimpflatie waargenomen sinds ${fmtD(d.base_date)}.</p>`
-    : `<table><tr><th>Datum</th><th>Product</th><th>Was</th><th>Werd</th><th class="num">Prijs per eenheid</th></tr>` +
+    ? `<p class="empty">No shrinkflation observed since ${fmtD(d.base_date)}.</p>`
+    : `<table><tr><th>Date</th><th>Product</th><th>Was</th><th>Became</th><th class="num">Price per unit</th></tr>` +
       d.shrinkflation.map(e => `<tr><td>${fmtD(e.date)}</td><td>${e.title}</td><td>${e.old_size}</td><td>${e.new_size}</td><td class="num">${e.old_unit_price} → ${e.new_unit_price}</td></tr>`).join("") + "</table>";
 
   // Categories
   document.getElementById("cats").innerHTML =
-    `<table><tr><th>Categorie</th><th class="num">Gewicht</th><th class="num">Index (schapprijs)</th></tr>` +
+    `<table><tr><th>Category</th><th class="num">Weight</th><th class="num">Index (shelf price)</th></tr>` +
     d.categories.map(c => `<tr><td>${c.name}</td><td class="num">${c.weight}</td><td class="num">${fmtI(c.rel_latest)}</td></tr>`).join("") + "</table>";
 
   // Product table
   document.getElementById("products").innerHTML =
-    `<table><tr><th>Product</th><th>Categorie</th><th>Inhoud</th><th class="num">Schapprijs</th><th class="num">Nu</th></tr>` +
+    `<table><tr><th>Product</th><th>Category</th><th>Size</th><th class="num">Shelf price</th><th class="num">Now</th></tr>` +
     d.products_latest.map(p => `<tr><td>${p.title}${p.is_bonus ? ' <span class="bonus">bonus</span>' : ""}</td><td>${p.category}</td><td>${p.size}</td><td class="num">${fmtE(p.list_price)}</td><td class="num">${fmtE(p.current_price ?? p.list_price)}</td></tr>`).join("") + "</table>";
 
-  document.getElementById("gen").textContent = "Laatste update: " + new Date(d.generated).toLocaleString("nl-NL") + ".";
+  document.getElementById("gen").textContent = "Last update: " + new Date(d.generated).toLocaleString("en-GB") + ".";
 });
 </script>
 </body>
