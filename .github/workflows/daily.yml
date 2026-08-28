@@ -1,0 +1,29 @@
+name: daily-snapshot
+
+on:
+  schedule:
+    - cron: "15 4 * * *"   # 06:15 in NL summer, 05:15 in winter
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Collect prices
+        run: python collect.py
+      - name: Compute index
+        run: python compute.py
+      - name: Commit snapshot
+        run: |
+          git config user.name "boodschappen-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data docs
+          git diff --cached --quiet || git commit -m "Snapshot $(date -u +%F)"
+          git push
