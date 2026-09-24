@@ -71,9 +71,10 @@ details summary { cursor: pointer; color: var(--ink-2); }
   </div>
 
   <div class="card">
-    <h2>Shrinkflation log</h2>
-    <p class="sub" style="font-size:.85rem">Products whose package got smaller while the shelf price
-    stayed the same or rose. Same product ID, less content.</p>
+    <h2>Shrinkflation watch</h2>
+    <p class="sub" style="font-size:.85rem">Products whose pack size changed. Same product ID, different
+    content. On those days the index compares price per kilo or liter instead of pack price, so a pack
+    that shrinks at the same price counts as a price rise, and a bigger pack isn't mistaken for one.</p>
     <div class="scroll" id="shrink"></div>
   </div>
 
@@ -91,8 +92,9 @@ details summary { cursor: pointer; color: var(--ink-2); }
 
   <footer>
     Method: fixed basket (Laspeyres), category weights approximate CBS household spending shares.
-    Shelf price = price before promotions; paid price = including bonus discounts; unit price = price
-    per liter/kilo (this one also moves on shrinkflation). One daily snapshot of a single retailer;
+    Shelf price = price before promotions; paid price = including bonus discounts. Both are adjusted
+    for pack-size changes by comparing price per kilo or liter on the day a pack changes, so
+    shrinkflation shows up as the price rise it is. One daily snapshot of a single retailer;
     this is not an official inflation measure. Data and code:
     <a href="https://github.com/NickZward/boodschappen-index">github.com/NickZward/boodschappen-index</a>.
     <span id="gen"></span>
@@ -180,10 +182,18 @@ fetch("data.json").then(r => r.json()).then(d => {
   svg.addEventListener("mouseleave", () => { tt.style.display = "none"; xh().setAttribute("visibility", "hidden"); });
 
   // Shrinkflation log
+  const change = e => {
+    const pct = e.size_change_pct === "" || e.size_change_pct == null ? "" :
+      ` ${e.size_change_pct > 0 ? "+" : ""}${e.size_change_pct}%`;
+    const label = {shrunk: "▼ Shrunk", grew: "▲ Grew"}[e.direction] || "Changed";
+    return label + pct;
+  };
+  const unitCell = e => e.old_unit_price && e.new_unit_price
+    ? `€${e.old_unit_price} → €${e.new_unit_price}` : "";
   document.getElementById("shrink").innerHTML = d.shrinkflation.length === 0
-    ? `<p class="empty">No shrinkflation observed since ${fmtD(d.base_date)}.</p>`
-    : `<table><tr><th>Date</th><th>Product</th><th>Was</th><th>Became</th><th class="num">Price per unit</th></tr>` +
-      d.shrinkflation.map(e => `<tr><td>${fmtD(e.date)}</td><td>${e.title}</td><td>${e.old_size}</td><td>${e.new_size}</td><td class="num">${e.old_unit_price} → ${e.new_unit_price}</td></tr>`).join("") + "</table>";
+    ? `<p class="empty">No pack-size changes observed since ${fmtD(d.base_date)}.</p>`
+    : `<table><tr><th>Date</th><th>Product</th><th>Change</th><th>Was</th><th>Became</th><th class="num">Price per kg/l</th></tr>` +
+      d.shrinkflation.map(e => `<tr><td>${fmtD(e.date)}</td><td>${e.title}</td><td>${change(e)}</td><td>${e.old_size}</td><td>${e.new_size}</td><td class="num">${unitCell(e)}</td></tr>`).join("") + "</table>";
 
   // Categories
   document.getElementById("cats").innerHTML =

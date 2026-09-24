@@ -6,19 +6,21 @@ Every day an automated job records the price of the exact same products (same pr
 
 | Series | What it measures |
 |---|---|
-| **Shelf-price index** | Shelf prices before any discount. The headline index. |
-| **Paid-price index** | Prices actually paid, bonus discounts included. The gap with the shelf index shows how much promo pressure there is. |
-| **Unit-price index** | Price per liter/kilo. This one also moves when a package quietly shrinks while the shelf price stays the same. |
+| **Shelf-price index** | Shelf prices before any discount, adjusted for pack-size changes. The headline index. |
+| **Paid-price index** | Prices actually paid, bonus discounts included, adjusted for pack-size changes. The gap with the shelf index shows how much promo pressure there is. |
+| **Unit-price index** | AH's published price per liter/kilo, for the products that have one. A cross-check on the size adjustment. |
 
 ## Shrinkflation detection
 
-Because products are tracked by ID, a package change is directly observable: same product, smaller `salesUnitSize`, same or higher shelf price. Every such event lands in [data/shrinkflation.csv](data/shrinkflation.csv) and in the dashboard's shrinkflation log, with the price per unit before and after.
+Because products are tracked by ID, a package change is directly observable: same product, different `salesUnitSize`. Every such event lands in [data/shrinkflation.csv](data/shrinkflation.csv) and in the dashboard's shrinkflation watch, labelled `shrunk` or `grew` with the size change in percent and the price per unit before and after.
+
+Pack-size changes are also corrected for in the index itself. On the day a pack changes, that product's price is compared per kilo or liter instead of per pack (quantity is derived from AH's per-unit price, falling back to parsing the size text). So a pack that shrinks from 200g to 180g at the same price counts as the +11% price rise it is, and a pack that grows at the same price per kilo counts as no change. This is the same principle statistical offices use for quality adjustment. If the quantity change can't be determined, the new pack starts a fresh base for that product rather than guessing.
 
 ## Method
 
 - **Fixed basket (Laspeyres):** 72 staples across 11 categories (dairy, bread, meat & fish, produce, drinks, snacks, pantry, frozen, household, personal care), frozen on 2026-08-28 in [basket.json](basket.json). Products were chosen to be canonical long-lived items (house-brand basics and market-leading A-brands).
 - **Weights:** categories are weighted with approximate CBS household spending shares (see `category_weight` in the basket). Products weigh equally within their category.
-- **Aggregation:** each product's price is expressed relative to its own base price; products average into their category; categories combine with the fixed weights.
+- **Aggregation:** each product's price is chained day to day from its own first observation (size-adjusted, see above); products average into their category; categories combine with the fixed weights.
 - **Data:** one snapshot per day, stored append-only in [data/prices.csv](data/prices.csv). The git history doubles as an audit trail: every observation is traceable to a commit.
 
 ## Honest caveats
