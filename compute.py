@@ -10,6 +10,12 @@ compares price per unit (per kg/liter/piece) instead of the pack price. A pack
 that shrinks at the same price therefore counts as the price rise it is
 (shrinkflation), and a pack that grows is not mistaken for one.
 
+Gaps and replacements: on a day a product has no price (fetch failure or
+delisting), it stays in its category's average at its last shelf-price
+relative, at regular price for the paid series. A replacement product
+(`replaces` in basket.json) links in at its predecessor's last relative, so a
+basket swap does not move the index by itself.
+
 Three series:
   index_list  : shelf price before any discount, size-adjusted (the headline)
   index_paid  : price actually paid, bonus discounts included, size-adjusted
@@ -105,22 +111,60 @@ def main():
         by_date[r["date"]][pid] = r
         category[pid] = r["category"]
 
+    predecessor_of = {}
+    for b in basket:
+        rep = b.get("replaces")
+        if rep and str(rep["webshopId"]) in category and str(b["webshopId"]) in category:
+            predecessor_of[str(b["webshopId"])] = str(rep["webshopId"])
+    priced_dates = {pid: [d for d in dates if pid in by_date[d]
+                          and fnum(by_date[d][pid]["list_price"])] for pid in category}
+    # A product counts from its first price through its last collected row,
+    # or until the day before its successor's first price.
+    active_until = {pid: max(d for d in dates if pid in by_date[d]) for pid in category}
+    for succ, pred in predecessor_of.items():
+        before = [d for d in dates if priced_dates[succ] and d < priced_dates[succ][0]]
+        if before:
+            active_until[pred] = min(active_until[pred], before[-1])
+    order = [p for p in category if p not in predecessor_of]
+    while len(order) < len(category):
+        nxt = [p for p in category if p not in order and predecessor_of[p] in order]
+        if not nxt:
+            break
+        order += nxt
+
     # Chain each product's shelf and paid price relatives through time,
     # switching to per-unit comparison on days its pack size changes.
+    # Paid relative = shelf relative * promo_t / promo0, where promo = paid/shelf
+    # and promo0 is the line's promo factor on its base day.
     rel = defaultdict(dict)       # rel[date][pid] = {"list": x, "paid": y}
+    last_list, promo0 = {}, {}
     unit_base = {}
     events = []
-    for pid in category:
+    for pid in order:
+        if not priced_dates[pid]:
+            continue
+        pred = predecessor_of.get(pid)
         prev = None
         chain_list = chain_paid = 1.0
         for d in dates:
-            r = by_date[d].get(pid)
-            if not r or not fnum(r["list_price"]):
+            if d < priced_dates[pid][0]:
                 continue
-            lp = fnum(r["list_price"])
+            if d > active_until[pid]:
+                break
+            r = by_date[d].get(pid)
+            lp = fnum(r["list_price"]) if r else None
+            if not lp:
+                rel[d][pid] = {"list": chain_list, "paid": chain_list / promo0[pid]}
+                continue
             cp = fnum(r["current_price"]) or lp
             if prev is None:
                 unit_base[pid] = fnum(r["unit_price"])
+                if pred:
+                    chain_list = last_list[pred]
+                    promo0[pid] = promo0[pred]
+                else:
+                    promo0[pid] = cp / lp
+                chain_paid = chain_list * (cp / lp) / promo0[pid]
             else:
                 lp0 = fnum(prev["list_price"])
                 cp0 = fnum(prev["current_price"]) or lp0
@@ -143,6 +187,7 @@ def main():
                     chain_paid *= (cp / cp0) / q
             rel[d][pid] = {"list": chain_list, "paid": chain_paid}
             prev = r
+        last_list[pid] = chain_list
 
     series = {"index_list": [], "index_paid": [], "index_unit": [],
               "basket_cost": [], "paid_cost": [], "bonus_count": [], "n_products": []}
@@ -151,16 +196,18 @@ def main():
         cost = paid = 0.0
         bonus = n = 0
         for pid, rr in rel[d].items():
-            r = by_date[d][pid]
-            lp = fnum(r["list_price"])
+            ratios["list"][pid] = rr["list"]
+            ratios["paid"][pid] = rr["paid"]
+            r = by_date[d].get(pid)
+            lp = fnum(r["list_price"]) if r else None
+            if not lp:
+                continue
             cp = fnum(r["current_price"]) or lp
             up = fnum(r["unit_price"])
             n += 1
             cost += lp
             paid += cp
             bonus += r["is_bonus"] == "True"
-            ratios["list"][pid] = rr["list"]
-            ratios["paid"][pid] = rr["paid"]
             if up and unit_base.get(pid):
                 ratios["unit"][pid] = up / unit_base[pid]
         series["index_list"].append(round(weighted_index(ratios["list"], category, weights), 2))

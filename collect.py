@@ -3,6 +3,11 @@
 Fetches every basket product from the AH mobile API (politely: one request
 per second at most) and appends one row per product to data/prices.csv.
 Re-running on the same day replaces that day's rows, so the job is idempotent.
+
+Products that come back without a price (usually delisted by AH) are still
+recorded, but listed in unavailable.txt; the workflow fails on a non-empty
+list after committing the snapshot, so GitHub emails a reminder to replace
+them in basket.json.
 """
 import csv
 import json
@@ -17,6 +22,7 @@ import ah
 
 ROOT = Path(__file__).parent
 PRICES = ROOT / "data" / "prices.csv"
+UNAVAILABLE = ROOT / "unavailable.txt"
 FIELDS = ["date", "webshopId", "category", "title", "list_price", "current_price",
           "is_bonus", "bonus_mechanism", "sales_unit_size", "unit_price", "unit"]
 
@@ -38,7 +44,7 @@ def main():
     today = datetime.now(ZoneInfo("Europe/Amsterdam")).date().isoformat()
     token = ah.anonymous_token()
 
-    rows, missing = [], []
+    rows, missing, unavailable = [], [], []
     for item in basket:
         card = None
         for attempt in range(3):
@@ -52,6 +58,9 @@ def main():
                     time.sleep(2.0 * (attempt + 1))
         if card is None:
             continue
+        if card.get("priceBeforeBonus") is None:
+            status = card.get("orderAvailabilityStatus") or "NO_PRICE"
+            unavailable.append(f"{item['title']} ({item['webshopId']}): {status}")
         unit, unit_price = parse_unit_price(card.get("unitPriceDescription"))
         rows.append({
             "date": today,
@@ -88,8 +97,12 @@ def main():
         w.writeheader()
         w.writerows(existing)
         w.writerows(rows)
+    UNAVAILABLE.write_text("".join(line + "\n" for line in unavailable))
+    for line in unavailable:
+        print(f"::warning title=Basket product unavailable::{line}")
     print(f"{today}: wrote {len(rows)}/{len(basket)} products "
-          f"({sum(1 for r in rows if r['is_bonus'])} in bonus)")
+          f"({sum(1 for r in rows if r['is_bonus'])} in bonus, "
+          f"{len(unavailable)} unavailable)")
 
 
 if __name__ == "__main__":

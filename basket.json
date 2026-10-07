@@ -431,13 +431,19 @@
  {
   "category": "Drinks",
   "category_weight": 11,
-  "query": "cola regular",
-  "webshopId": 616715,
-  "title": "Coca-Cola Original taste 6-pack",
+  "query": "coca cola original",
+  "webshopId": 2800,
+  "title": "Coca-Cola Original taste",
   "brand": "Coca-Cola",
-  "salesUnitSize": "6 stuks",
-  "price_at_freeze": 13.14,
-  "unitPriceDescription": null
+  "salesUnitSize": "1,5 l",
+  "price_at_freeze": 2.29,
+  "unitPriceDescription": "normale prijs per liter €1.53",
+  "added": "2026-10-07",
+  "replaces": {
+   "webshopId": 616715,
+   "title": "Coca-Cola Original taste 6-pack",
+   "delisted": "2026-09-25"
+  }
  },
  {
   "category": "Drinks",

@@ -22,13 +22,20 @@ Pack-size changes are also corrected for in the index itself. On the day a pack 
 - **Weights:** categories are weighted with approximate CBS household spending shares (see `category_weight` in the basket). Products weigh equally within their category.
 - **Aggregation:** each product's price is chained day to day from its own first observation (size-adjusted, see above); products average into their category; categories combine with the fixed weights.
 - **Data:** one snapshot per day, stored append-only in [data/prices.csv](data/prices.csv). The git history doubles as an audit trail: every observation is traceable to a commit.
+- **Gaps and replacements:** on a day a product has no price (a failed fetch, or a delisting), it stays in its category's average at its last price instead of dropping out, so one missing product doesn't reweight its neighbours. When AH delists a product, the daily run fails with a warning naming it (after saving that day's data), and a successor is added to `basket.json` with a `replaces` field. The successor links in at its predecessor's last price level, so the swap itself doesn't move the index.
+
+## Basket changes
+
+| Date | Out | In | Why |
+|---|---|---|---|
+| 2026-10-07 | Coca-Cola Original taste 6-pack | Coca-Cola Original taste 1,5 l | 6-pack delisted by AH on 2026-09-25 |
 
 ## Honest caveats
 
 - One retailer, one channel (the AH webshop). This is a price signal, not an official inflation measure; for that, see [CBS](https://www.cbs.nl/nl-nl/cijfers/detail/83131NED).
 - 72 products is a basket, not the full CPI universe. Category weights are approximations.
 - Bonus prices are national webshop prices; personal discounts are not included.
-- If a product is discontinued, it drops out and a successor is added in `basket.json` (documented in the commit message). The index chains through such changes because every product is measured against its own base.
+- A successor is a close substitute, not the same product. Linking it in keeps the index level continuous, but from then on it tracks the successor's own price changes.
 
 ## Running it yourself
 
