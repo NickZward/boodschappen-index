@@ -27,3 +27,10 @@ jobs:
           git add data docs
           git diff --cached --quiet || git commit -m "Snapshot $(date -u +%F)"
           git push
+      - name: Check basket health
+        run: |
+          if [ -s unavailable.txt ]; then
+            echo "Basket products without a price; replace them in basket.json:"
+            cat unavailable.txt
+            exit 1
+          fi
